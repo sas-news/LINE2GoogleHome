@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express from "express";
 import { Client, middleware } from "@line/bot-sdk";
 import HomePlayer from "google-home-player";
@@ -9,9 +10,8 @@ const Home = new HomePlayer(ip, lang);
 
 // トークン
 const config = {
-  channelSecret: "69052890172f92ec6a50cbcc224a8aeb",
-  channelAccessToken:
-    "OFhVEW1PwdqmWo5+/PeN1848N+2w4Gbe+moTSpvcOGmIhVoKKsNeNxvcEdWSknEkXbGBP8k1MmoUGiGAW+ak15/XZIaIDWWQGF8sIRYEvaiKFNuSHhMUMSATv4BpCfrKKnmKbi/GKySOFA4SsCncRgdB04t89/1O/w1cDnyilFU=",
+  channelSecret: process.env.CHANNEL_SECRET,
+  channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
 };
 const client = new Client(config);
 

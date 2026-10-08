@@ -1,4 +1,5 @@
 // インポート
+import "dotenv/config";
 import express from "express";
 import { Client, middleware } from "@line/bot-sdk";
 import GoogleHomePlayer from "google-home-player";
@@ -21,22 +22,25 @@ const client = new Client(config);
 const PORT = process.env.PORT || 3000;
 const app = express();
 app.post("/", middleware(config), (req, res) => {
-  Promise.all(req.body.events.map(handleEvent)).then((result) =>
-    res.json(result)
-  );
+  Promise.all(req.body.events.map(handleEvent))
+    .then((result) => res.json(result))
+    .catch((err) => {
+      console.error(err);
+      res.status(500).end();
+    });
 });
 app.listen(PORT);
 
 // オウム返し
 function handleEvent(event) {
-  let SendMessage = event.message.text;
-  if (isUrl(SendMessage)) {
-    googleHome.play(SendMessage);
-    console.log("Play");
-  } else {
-    googleHome.say(SendMessage);
-    console.log("Say");
+  if (event.type !== "message" || event.message.type !== "text") {
+    return;
   }
+  let SendMessage = event.message.text;
+  const isPlay = isUrl(SendMessage);
+  (isPlay ? googleHome.play(SendMessage) : googleHome.say(SendMessage))
+    .then(() => console.log(isPlay ? "Play" : "Say"))
+    .catch((err) => console.error("GoogleHomeへの送信に失敗しました:", err));
   // return client.replyMessage(event.replyToken, {
   //   type: "text",
   //   text: "Say",
