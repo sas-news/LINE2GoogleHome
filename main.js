@@ -1,4 +1,4 @@
-const GoogleHomePlayer = require("google-home-player");
+import GoogleHomePlayer from "google-home-player";
 
 const ip = "192.168.10.102"; // Google Home / Google NestのIPアドレスを入力
 const lang = "ja";
